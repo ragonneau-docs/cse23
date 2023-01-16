@@ -1,0 +1,59 @@
+%% cse23.tex
+%% Copyright 2023 Tom M. Ragonneau
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+%
+% The Current Maintainer of this work is Tom M. Ragonneau.
+\documentclass{presentation}
+
+% Bibliographical resources
+\addbibresource{bib/strings.bib}
+\addbibresource{bib/optim.bib}
+\addbibresource{bib/ragonneau.bib}
+
+\title{The COBYQA method}
+\subtitle{A derivative-free trust-region SQP method for constrained optimization}
+\date{March 2, 2023}
+\author[Tom M. Ragonneau]{\texorpdfstring{
+    \href{https://www.tomragonneau.com/}{Tom M. Ragonneau}\\
+    \footnotesize Joint work with Dr.\ \href{https://www.zhangzk.net/}{Zaikun Zhang}
+}{Tom M. Ragonneau}}
+\institute[PolyU, HK]{
+    Department of Applied Mathematics\\
+    The Hong Kong Polytechnic University
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}[nopagination]
+    \frametitle{Table of contents}
+    
+	\tableofcontents[hideallsubsections]
+\end{frame}
+
+\begin{frame}
+    \frametitle{Title}
+    
+	Cite~\textcite{Ragonneau_2022}.
+\end{frame}
+
+\appendix
+
+\begin{frame}[t,allowframebreaks]
+    \frametitle{References}
+
+    \AtNextBibliography{\small}
+	\printbibliography
+\end{frame}
+
+\end{document}
