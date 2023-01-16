@@ -1,4 +1,3 @@
-
 %% presentation.cls
 %% Copyright 2023 Tom M. Ragonneau
 %
