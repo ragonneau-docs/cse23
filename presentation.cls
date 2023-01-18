@@ -13,9 +13,9 @@
 %
 % The Current Maintainer of this work is Tom M. Ragonneau.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{presentation}[2023/01/16 Presentation document class]
+\ProvidesClass{presentation}[2023/01/18 Presentation document class]
 
-% Load beamer class as basis
+% Load beamer class
 \PassOptionsToPackage{usenames,dvipsnames}{xcolor}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{beamer}}
 \ProcessOptions\relax
@@ -59,33 +59,36 @@
 \defbeamertemplate*{footline}{regular}{\insertfootline}
 \defbeamertemplate{footline}{nopagination}{\insertfootline[nopagination]}
 \providebool{nopaginationframe}
-\define@key{beamerframe}{nopagination}[true]{%
-    \booltrue{nopaginationframe}%
-    \begingroup%
-    \setbeamertemplate{footline}[nopagination]%
+\define@key{beamerframe}{nopagination}[true]{
+    \booltrue{nopaginationframe}
+    \begingroup
+    \setbeamertemplate{footline}[nopagination]
 }
-\apptocmd{\beamer@reseteecodes}{%
-    \ifbool{nopaginationframe}{%
-        \endgroup%
-        \boolfalse{nopaginationframe}%
-        \addtocounter{framenumber}{-1}%
+\apptocmd{\beamer@reseteecodes}{
+    \ifbool{nopaginationframe}{
+        \endgroup
+        \boolfalse{nopaginationframe}
+        \addtocounter{framenumber}{-1}
     }{}%
 }{}{}
 
-\renewcommand{\maketitle}{%
+% Add the option 'nopagination' to the titlepage environment
+\renewcommand{\maketitle}{
     \begin{frame}[nopagination]
         \titlepage
-    \end{frame}%
+    \end{frame}
 }
 
-% Modify beamer default template
+% Remove the navigation symbols
 \setbeamertemplate{navigation symbols}{}
+
+% Customize the itemize environment
 \setbeamertemplate{itemize items}[triangle]
 
 % Put only the numbered sections in the table of contents
 \setbeamertemplate{section in toc}[sections numbered]
 
-% Latin fonts
+% Fonts
 \usepackage[T1]{fontenc}
 \usepackage[american]{babel}
 \usepackage{fontspec}
@@ -115,11 +118,12 @@
 
 % Place a partial table of contents at the beginning of each section
 \AtBeginSection[]{
-	\begin{framenopagination}
+	\begin{frame}[nopagination]
         \frametitle{Table of contents}
 		\tableofcontents[currentsection,hideallsubsections]
-	\end{framenopagination}
+	\end{frame}
 }
+
 % Bibliography
 \RequirePackage[
     style=ext-authoryear-comp,
