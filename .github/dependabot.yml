@@ -1,5 +1,5 @@
 # .github/dependabot.yml
-# Dependabot configuration file
+# Set update schedule for GitHub Actions
 # See https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/keeping-your-actions-up-to-date-with-dependabot for details
 
 version: 2
@@ -9,4 +9,3 @@ updates:
     directory: /
     schedule:
       interval: daily
-      

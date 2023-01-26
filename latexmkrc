@@ -18,11 +18,7 @@ $pdf_mode = 5;
 $postscript_mode = 0;
 $dvi_mode = 0;
 
-# Configure xelatex engine
-push @generated_exts, "xdv";
-
-# Run bibtex or biber as needed to regenerate the bbl files
+# Run biber to regenerate the bbl files
 $bibtex_use = 2;
 
-# Remove extra extensions on clean
-$clean_ext = "nav snm";
+$clean_ext = "nav run.xml snm synctex.gz";

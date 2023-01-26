@@ -13,9 +13,9 @@
 #
 # The Current Maintainer of this work is Tom M. Ragonneau.
 LC := latexmk
-LCFLAGS := -file-line-error -halt-on-error -interaction=nonstopmode
+LCFLAGS := -shell-escape -file-line-error -halt-on-error -interaction=nonstopmode
 
-all: $(basename $(wildcard *.tex))
+latex: main
 
 %: %.tex
 	$(LC) $(LCFLAGS) $^

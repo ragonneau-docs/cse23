@@ -10,52 +10,65 @@
 % version 2005/12/01 or later.
 %
 % This work has the LPPL maintenance status `maintained'.
-%
+% 
 % The Current Maintainer of this work is Tom M. Ragonneau.
 \documentclass{presentation}
+% \usepackage{qrcode}
 
-% Bibliographical resources
+% Resources for the bibliography
 \addbibresource{bib/strings.bib}
 \addbibresource{bib/optim.bib}
 \addbibresource{bib/ragonneau.bib}
 
-\title{The COBYQA Method}
-\subtitle{A Derivative-Free Trust-Region SQP Method for Constrained Optimization}
-\date[CSE23/MS281]{March 2, 2023}
-\author[Tom M. Ragonneau]{\texorpdfstring{
-    \href{https://www.tomragonneau.com/}{Tom M. Ragonneau}\\
-    \footnotesize Joint work with Dr.\ \href{https://www.zhangzk.net/}{Zaikun Zhang}
-}{Tom M. Ragonneau}}
-\institute[PolyU, HK]{
-    Department of Applied Mathematics\\
+% Metadata
+\title{COBYQA}
+\subtitle{A derivative-free trust-region SQP method for nonlinearly constrained optimization}
+\date{CSE23/MS281 (March 2, 2023)}
+\author{\href{https://www.tomragonneau.com/}{Tom M. Ragonneau} \and \href{https://www.zhangzk.net/}{Zaikun Zhang}}
+\institute{
+    Department of Applied Mathematics\\ 
     The Hong Kong Polytechnic University
 }
+\titlegraphic{}
 
 \begin{document}
 
 \maketitle
 
-\begin{frame}[nopagination]
-    \frametitle{Table of contents}
-    
-	\tableofcontents[hideallsubsections]
+\begin{frame}{The problems of interest}
+    We are interested in problems of the form
+    \begin{align*}
+        \min_{x \in \R^n}   & \quad f(x)\\
+        \mathrm{s.t.}       & \quad c(x) \le 0,\\
+                            & \quad l \le x \le u,
+    \end{align*}
+    where derivatives of~$f$ and~$c$ are \alert{unknown}.
+
+    \begin{block}{Remarks}
+        \begin{enumerate}
+            \item The method also accepts \alert{equality constraints}.
+            \item The bound constraints are handled separately.
+        \end{enumerate}
+    \end{block}
 \end{frame}
 
-\section{Introduction}
-
-\begin{frame}
-    \frametitle{Title}
-    
-	Cite~\textcite{Ragonneau_2022}.
+\begin{frame}{Inviolable bound constraints}
+    To do.
 \end{frame}
+
+\begin{frame}{Table of contents}
+    \tableofcontents[hideallsubsections]
+\end{frame}
+
+\section{Interpolation-based quadratic models}
+
+\section{A derivative-free trust-region SQP method}
 
 \appendix
 
-\begin{frame}[t,allowframebreaks]
-    \frametitle{References}
-
-    \AtNextBibliography{\small}
-	\printbibliography
+\begin{frame}[t,allowframebreaks]{References}
+    \nocite{Ragonneau_2022}
+    \printbibliography[heading=none]
 \end{frame}
 
 \end{document}

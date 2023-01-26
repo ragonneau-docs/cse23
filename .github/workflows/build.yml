@@ -1,5 +1,5 @@
 # .github/workflows/build.yml
-# GitHub Actions configuration file for latex
+# Compile LaTeX documents
 # See https://github.com/xu-cheng/latex-action for details
 
 name: build
@@ -13,26 +13,26 @@ on:
 
 jobs:
   run:
-    name: Generate pdf document
+    name: Compile LaTeX documents
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          submodules: true
 
-      - name: Generate pdf documents
+      - name: Generate PDF documents
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: cse23.tex
+          root_file: "*.tex"
+          glob_root_file: true
           args: -file-line-error -halt-on-error -interaction=nonstopmode
           extra_fonts: |
             ./fonts/fira-mono/*.otf
             ./fonts/fira-sans/*.otf
           pre_compile: tlmgr update --self && tlmgr update --all
+          latexmk_shell_escape: true
 
-      - name: Rename pdf documents
+      - name: Rename PDF documents
         run: bash build_tools/github/rename.sh
 
       - name: Store artifacts

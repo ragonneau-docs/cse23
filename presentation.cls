@@ -1,4 +1,4 @@
-%% presentation.cls
+%% presentation.tex
 %% Copyright 2023 Tom M. Ragonneau
 %
 % This work may be distributed and/or modified under the
@@ -10,119 +10,56 @@
 % version 2005/12/01 or later.
 %
 % This work has the LPPL maintenance status `maintained'.
-%
+% 
 % The Current Maintainer of this work is Tom M. Ragonneau.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{presentation}[2023/01/18 Presentation document class]
+\ProvidesClass{presentation}[2023/01/26 Beamer document class of Tom M. Ragonneau]
 
-% Load beamer class
-\PassOptionsToPackage{usenames,dvipsnames}{xcolor}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{beamer}}
 \ProcessOptions\relax
 \LoadClass[10pt]{beamer}
 
+\RequirePackage[T1]{fontenc}
+\RequirePackage[english]{babel}
+\RequirePackage{csquotes}
+
 % Manage frame numbering in appendices
 \RequirePackage{appendixnumberbeamer}
 
-% Beamer theme and color theme
-\usetheme{Boadilla}
-\usecolortheme{seahorse}
-\usefonttheme{professionalfonts}
+% Extra tools for LaTeX
+\RequirePackage{etoolbox}
 
-% Add the option 'nopagination' to the frame environment to remove the pagination from the footer
-\usepackage{ifthen}
-\newcommand{\insertfootline}[1][regular]{%
-    \leavevmode%
-    \hbox{%
-        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
-            \usebeamerfont{author in head/foot}\insertshortauthor\expandafter\ifblank\expandafter{\beamer@shortinstitute}{}{~~(\insertshortinstitute)}
-        \end{beamercolorbox}%
-        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
-            \usebeamerfont{title in head/foot}\insertshorttitle
-        \end{beamercolorbox}%
-        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,leftskip=2ex,rightskip=2ex,sep=0pt]{date in head/foot}%
-            \hfill%
-            \usebeamerfont{date in head/foot}%
-            \insertshortdate{}%
-            \hfill%
-            \usebeamercolor[fg]{page number in head/foot}%
-            \usebeamerfont{page number in head/foot}%
-            \ifthenelse{\equal{#1}{regular}}{%
-                \usebeamertemplate{page number in head/foot}%
-            }{%
-                \phantom{\usebeamertemplate{page number in head/foot}}%
-            }%
-        \end{beamercolorbox}%
-    }%
-    \vskip0pt%
-}
-\defbeamertemplate*{footline}{regular}{\insertfootline}
-\defbeamertemplate{footline}{nopagination}{\insertfootline[nopagination]}
-\providebool{nopaginationframe}
-\define@key{beamerframe}{nopagination}[true]{
-    \booltrue{nopaginationframe}
-    \begingroup
-    \setbeamertemplate{footline}[nopagination]
-}
-\apptocmd{\beamer@reseteecodes}{
-    \ifbool{nopaginationframe}{
-        \endgroup
-        \boolfalse{nopaginationframe}
-        \addtocounter{framenumber}{-1}
-    }{}%
-}{}{}
-
-% Add the option 'nopagination' to the titlepage environment
-\renewcommand{\maketitle}{
-    \begin{frame}[nopagination]
-        \titlepage
-    \end{frame}
+% Load theme
+\usetheme{metropolis}
+\metroset{
+    titleformat=smallcaps,
+    numbering=fraction,
+    progressbar=frametitle,
+    block=fill,
 }
 
-% Remove the navigation symbols
-\setbeamertemplate{navigation symbols}{}
+% Patch `Overfull \vbox (13.79993pt too high)' in title page
+\def\titlepage{\usebeamertemplate{title page}}
 
-% Customize the itemize environment
-\setbeamertemplate{itemize items}[triangle]
+% Patch `Token not allowed in a PDF string (Unicode)' in appendix
+\pdfstringdefDisableCommands{\def\translate#1{#1}}
 
-% Put only the numbered sections in the table of contents
+% Change theme colors
+\definecolor{VeniceBlue}{HTML}{2F5675}
+\definecolor{RobRoy}{HTML}{DAAD49}
+\definecolor{Ziggurat}{HTML}{84B2B0}
+\setbeamercolor{normal text}{fg=VeniceBlue!70!black,bg=black!2}
+\setbeamercolor{alerted text}{fg=RobRoy!95!black}
+\setbeamercolor{example text}{fg=Ziggurat!75!black}
+
+% Change theme templates
 \setbeamertemplate{section in toc}[sections numbered]
 
-% Fonts
-\usepackage[T1]{fontenc}
-\usepackage[american]{babel}
-\usepackage{fontspec}
-\usepackage{csquotes}
-\setsansfont{FiraSans}[
-    Path=fonts/fira-sans/,
-    Extension=.otf,
-    UprightFont=*-Light,
-    BoldFont=*-Medium,
-    ItalicFont=*-LightItalic,
-    BoldItalicFont=*-SemiBoldItalic,
-]
-\setmonofont{FiraMono}[
-    Path=fonts/fira-mono/,
-    Extension=.otf,
-    UprightFont=*-Regular,
-    BoldFont=*-Bold,
-]
+% Font for mathematics
+\usefonttheme{professionalfonts}
 
-% Spacing between lines
-\usepackage[nodisplayskipstretch]{setspace}
-\setstretch{1.25}
-
-% Alert text
-\setbeamercolor{alerted text}{fg=RedViolet}
-\setbeamerfont{alerted text}{series=\bfseries}
-
-% Place a partial table of contents at the beginning of each section
-\AtBeginSection[]{
-	\begin{frame}[nopagination]
-        \frametitle{Table of contents}
-		\tableofcontents[currentsection,hideallsubsections]
-	\end{frame}
-}
+% Font for standout frames
+\setbeamerfont{standout}{size=\normalsize}
 
 % Bibliography
 \RequirePackage[
@@ -132,30 +69,62 @@
     sortcites=false,
     maxcitenames=3,
 ]{biblatex}
-\DefineBibliographyStrings{american}{
+\DefineBibliographyStrings{english}{
     bathesis={B\adddot A\adddotspace thesis},
     mathesis={M\adddot A\adddotspace thesis},
     phdthesis={Ph\adddot D\adddotspace thesis},
 }
 \setbeamertemplate{bibliography item}[triangle]
-\defbibenvironment{bibliography}{
-	\list{}{
-        \settowidth\labelwidth{\usebeamertemplate{bibliography item}}
-        \setlength\leftmargin{\labelwidth}
-        \setlength\labelsep{\biblabelsep}
-        \addtolength\leftmargin{\labelsep}
-        \setlength\bibitemsep{\itemsep}
-        \setlength\parsep{\bibparsep}
-	}
-}{\endlist}{\item}
 \DeclareNameAlias{author}{family-given}
 
-% List of hyphenation exceptions for US English
-% Source: https://ctan.org/tex-archive/info/digests/tugboat/hyphenex
-\input{ushyphex}
+% Path relative to the main .tex file
+\graphicspath{{./images/}}
 
-% Email field
-\newcommand{\email}[1]{\href{mailto:#1}{\texttt{\texorpdfstring{\usebeamercolor[fg]{structure}#1}{#1}}}}
+% Support for license
+\RequirePackage[
+    type={CC},
+    modifier={by-sa},
+    version={4.0},
+]{doclicense}
+\apptocmd{\doclicenseLongName}{license}{}{}
 
-% Patch warning `Package hyperref Warning: Token not allowed in a PDF string (Unicode)'
-\pdfstringdefDisableCommands{\def\translate#1{#1}}
+% Support for mathematics
+\RequirePackage{maths}
+
+% The following sets
+%  - \giturl to the complete url of the git repository
+%  - \giturlshort to the short url of the git repository
+% It assumes that
+%  - the current project is a (well-formed) git repository, and
+%  - the command `git' is installed and accessible.
+\RequirePackage{trimspaces}
+\newread\giturlstream
+\openin\giturlstream=|"./build_tools/giturl.sh"
+\read\giturlstream to \giturl
+\closein\giturlstream
+\trim@spaces@in\giturl
+\def\setgiturlshort#1://#2/\relax{\def\giturlshort{#2}}
+\expandafter\setgiturlshort\giturl\relax
+
+% Add a license frame at the end of the presentation
+\AtEndDocument{
+    \begin{frame}[standout]
+    
+        This work is licensed under a \doclicenseLongNameRef.
+        \begin{center}
+            \doclicenseImage[imagewidth=0.3\textwidth]
+        \end{center}
+    
+        \bigskip
+    
+        The source code of this presentation is available at
+        \begin{center}
+            \normalfont\href{\giturl}{\texttt{\giturlshort}}.
+        \end{center}
+    
+        It is based on the metropolis Beamer theme, available at
+        \begin{center}
+            \normalfont\href{https://github.com/matze/mtheme/}{\texttt{github.com/matze/mtheme}}.
+        \end{center}
+    \end{frame}
+}
