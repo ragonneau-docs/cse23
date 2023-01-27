@@ -10,15 +10,35 @@
 % version 2005/12/01 or later.
 %
 % This work has the LPPL maintenance status `maintained'.
-% 
+%
 % The Current Maintainer of this work is Tom M. Ragonneau.
 \documentclass{presentation}
-% \usepackage{qrcode}
+\usepackage{ifdraft}
 
 % Resources for the bibliography
 \addbibresource{bib/strings.bib}
 \addbibresource{bib/optim.bib}
 \addbibresource{bib/ragonneau.bib}
+
+% QR codes
+\ifdraft{\PassOptionsToPackage{draft}{qrcode}}{}
+\usepackage[nolinks]{qrcode}
+\qrset{level=Q,version=3}  % Up to 47 alphanumeric characters
+
+% Make QR codes clickable (the document is compiled with XeLaTeX)
+\setlength{\XeTeXLinkMargin}{1pt}
+\let\oldqrcode\qrcode\relax
+\def\qrcode#1{\href{#1}{\XeTeXLinkBox{\oldqrcode{#1}}}}
+
+% Maths commands for this presentation
+\newcommand{\obj}{f}
+\newcommand{\objm}[1][]{\hat{f}\ifcsempty{#1}{}{^{#1}}}
+\newcommand{\con}{c}
+\newcommand{\conm}[1][]{\hat{c}\ifcsempty{#1}{}{^{#1}}}
+\newcommand{\lag}{\mathcal{L}}
+\newcommand{\lagm}[1][]{\hat{\mathcal{L}}\ifcsempty{#1}{}{^{#1}}}
+\newcommand{\xl}{l}
+\newcommand{\xu}{u}
 
 % Metadata
 \title{COBYQA}
@@ -26,33 +46,34 @@
 \date{CSE23/MS281 (March 2, 2023)}
 \author{\href{https://www.tomragonneau.com/}{Tom M. Ragonneau} \and \href{https://www.zhangzk.net/}{Zaikun Zhang}}
 \institute{
-    Department of Applied Mathematics\\ 
+    Department of Applied Mathematics\\
     The Hong Kong Polytechnic University
 }
 \titlegraphic{}
+\hypersetup{
+    pdfsubject={Presentation of COBYQA at CSE23},
+    pdfkeywords={COBYQA,optimization,constrained-optimization,nonlinear-optimization,derivative-free optimization,blackbox optimization,trust-region method,SQP framework},
+}
 
 \begin{document}
 
 \maketitle
 
-\begin{frame}{The problems of interest}
+\begin{frame}{General context}
     We are interested in problems of the form
     \begin{align*}
-        \min_{x \in \R^n}   & \quad f(x)\\
-        \mathrm{s.t.}       & \quad c(x) \le 0,\\
-                            & \quad l \le x \le u,
+        \min_{x \in \R^n}   & \quad \obj(x)\\
+        \mathrm{s.t.}       & \quad \con(x) \le 0,\\
+                            & \quad \xl \le x \le \xu,
     \end{align*}
-    where derivatives of~$f$ and~$c$ are \alert{unknown}.
-
-    \begin{block}{Remarks}
-        \begin{enumerate}
-            \item The method also accepts \alert{equality constraints}.
-            \item The bound constraints are handled separately.
-        \end{enumerate}
-    \end{block}
+    where derivatives of $\obj$ and $\con$ are \alert{unknown}.
 \end{frame}
 
 \begin{frame}{Inviolable bound constraints}
+    To do.
+\end{frame}
+
+\begin{frame}{A practical example}
     To do.
 \end{frame}
 
@@ -60,14 +81,83 @@
     \tableofcontents[hideallsubsections]
 \end{frame}
 
-\section{Interpolation-based quadratic models}
+\section{The general framework}
 
-\section{A derivative-free trust-region SQP method}
+\begin{frame}{The derivative-free trust-region SQP method}
+    \begin{itemize}
+        \item Details are given in \textcite{Ragonneau_2022}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{A new \citeauthor{Byrd_1987}-\citeauthor{Omojokun_1989} approach}
+    \begin{itemize}
+        \item Classical approach of \textcite{Conn_Gould_Toint_2000}.
+    \end{itemize}
+\end{frame}
+
+\section{Interpolation-based models}
+
+\begin{frame}{Interpolation-based quadratic models}
+    \begin{itemize}
+        \item Models of \textcite{Powell_2004b}.
+        \item Least $H^2$-norm updating models of Xie and Yuan.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Updating the interpolation set}
+    To do.
+\end{frame}
+
+\section{Gap between theory and practice}
+
+\begin{frame}{A lot of questions must be addressed}
+    To do.
+\end{frame}
+
+\section{Implementation and experiments}
+
+\begin{frame}{The Python implementation of COBYQA}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+                \qrcode{https://www.cobyqa.com/}\\[1ex]
+                \href{https://www.cobyqa.com/}{Documentation}
+            \end{center}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+                \qrcode{https://github.com/cobyqa/cobyqa/}\\[1ex]
+                \href{https://github.com/cobyqa/cobyqa/}{Source code}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Comparing COBYQA with existing DFO solvers}
+    To do.
+\end{frame}
+
+\begin{frame}{Performance on bound-constrained problems}
+    To do.
+\end{frame}
+
+\begin{frame}{Performance on nonlinearly constrained problems}
+    To do.
+\end{frame}
+
+\begin{frame}{Comparison with COBYLA}
+    To do.
+\end{frame}
+
+\section{Conclusion}
+
+\begin{frame}{Conclusion and future work}
+    To do.
+\end{frame}
 
 \appendix
 
 \begin{frame}[t,allowframebreaks]{References}
-    \nocite{Ragonneau_2022}
     \printbibliography[heading=none]
 \end{frame}
 

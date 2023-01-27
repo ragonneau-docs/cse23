@@ -10,7 +10,7 @@
 % version 2005/12/01 or later.
 %
 % This work has the LPPL maintenance status `maintained'.
-% 
+%
 % The Current Maintainer of this work is Tom M. Ragonneau.
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{presentation}[2023/01/26 Beamer document class of Tom M. Ragonneau]
@@ -47,10 +47,10 @@
 % Change theme colors
 \definecolor{VeniceBlue}{HTML}{2F5675}
 \definecolor{RobRoy}{HTML}{DAAD49}
-\definecolor{Ziggurat}{HTML}{84B2B0}
+\definecolor{FernGreen}{HTML}{4F7942}
 \setbeamercolor{normal text}{fg=VeniceBlue!70!black,bg=black!2}
 \setbeamercolor{alerted text}{fg=RobRoy!95!black}
-\setbeamercolor{example text}{fg=Ziggurat!75!black}
+\setbeamercolor{example text}{fg=FernGreen!95!black}
 
 % Change theme templates
 \setbeamertemplate{section in toc}[sections numbered]
@@ -60,6 +60,41 @@
 
 % Font for standout frames
 \setbeamerfont{standout}{size=\normalsize}
+
+% Customize blocks, alert blocks, and example blocks
+\renewcommand{\metropolis@block}[1]{
+    \par\vskip\medskipamount%
+    \setlength{\parskip}{0pt}
+    \ifdefempty{\insertblocktitle}{}{
+        \ifbeamercolorempty[bg]{block title#1}{%
+            \begin{beamercolorbox}[rightskip=0pt plus 4em]{block title#1}}{%
+        \ifbeamercolorempty[bg]{block title}{%
+            \begin{beamercolorbox}[rightskip=0pt plus 4em]{block title#1}%
+        }{%
+            \begin{beamercolorbox}[
+                sep=\dimexpr\metropolis@blocksep-\metropolis@blockadjust\relax,
+                leftskip=\metropolis@blockadjust,
+                rightskip=\dimexpr\metropolis@blockadjust plus 4em\relax,
+            ]{block title#1}%
+        }}%
+            \usebeamerfont*{block title#1}%
+            \metropolis@strut%
+            \insertblocktitle%
+            \metropolis@strut%
+        \end{beamercolorbox}%
+        \nointerlineskip%
+    }%
+    \ifbeamercolorempty[bg]{block body#1}{%
+        \begin{beamercolorbox}[vmode]{block body#1}}{
+    \ifbeamercolorempty[bg]{block body}{%
+        \begin{beamercolorbox}[vmode]{block body#1}%
+    }{%
+        \begin{beamercolorbox}[sep=\metropolis@blocksep, vmode]{block body#1}%
+        \vspace{-\metropolis@parskip}
+    }}%
+        \usebeamerfont{block body#1}%
+        \setlength{\parskip}{\metropolis@parskip}%
+}
 
 % Bibliography
 \RequirePackage[
@@ -76,6 +111,7 @@
 }
 \setbeamertemplate{bibliography item}[triangle]
 \DeclareNameAlias{author}{family-given}
+\setlength\bibitemsep{\itemsep}
 
 % Path relative to the main .tex file
 \graphicspath{{./images/}}
@@ -85,6 +121,7 @@
     type={CC},
     modifier={by-sa},
     version={4.0},
+    hyperxmp=false,
 ]{doclicense}
 \apptocmd{\doclicenseLongName}{license}{}{}
 
@@ -109,19 +146,19 @@
 % Add a license frame at the end of the presentation
 \AtEndDocument{
     \begin{frame}[standout]
-    
+
         This work is licensed under a \doclicenseLongNameRef.
         \begin{center}
-            \doclicenseImage[imagewidth=0.3\textwidth]
+            \upshape\doclicenseImage[imagewidth=0.3\textwidth]
         \end{center}
-    
+
         \bigskip
-    
+
         The source code of this presentation is available at
         \begin{center}
             \normalfont\href{\giturl}{\texttt{\giturlshort}}.
         \end{center}
-    
+
         It is based on the metropolis Beamer theme, available at
         \begin{center}
             \normalfont\href{https://github.com/matze/mtheme/}{\texttt{github.com/matze/mtheme}}.
