@@ -12,31 +12,31 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 % The Current Maintainer of this work is Tom M. Ragonneau.
-\documentclass{presentation}
-\usepackage{ifdraft}
+\documentclass[
+    % nogiturl,  % Whether to include the git URL in the license frame
+    % nolicense,  % Whether to include the license frame
+]{presentation}
 
 % Resources for the bibliography
 \addbibresource{bib/strings.bib}
 \addbibresource{bib/optim.bib}
 \addbibresource{bib/ragonneau.bib}
 
-% QR codes
-\ifdraft{\PassOptionsToPackage{draft}{qrcode}}{}
-\usepackage[nolinks]{qrcode}
-\qrset{level=Q,version=3}  % Up to 47 alphanumeric characters
-
-% Make QR codes clickable (the document is compiled with XeLaTeX)
-\setlength{\XeTeXLinkMargin}{1pt}
-\let\oldqrcode\qrcode\relax
-\def\qrcode#1{\href{#1}{\XeTeXLinkBox{\oldqrcode{#1}}}}
+% PGF/TikZ support
+\usepackage{tikz}
+\usetikzlibrary{patterns}
 
 % Maths commands for this presentation
 \newcommand{\obj}{f}
 \newcommand{\objm}[1][]{\hat{f}\ifcsempty{#1}{}{^{#1}}}
 \newcommand{\con}{c}
 \newcommand{\conm}[1][]{\hat{c}\ifcsempty{#1}{}{^{#1}}}
+\newcommand{\iter}[1][]{x\ifcsempty{#1}{}{^{#1}}}
 \newcommand{\lag}{\mathcal{L}}
 \newcommand{\lagm}[1][]{\hat{\mathcal{L}}\ifcsempty{#1}{}{^{#1}}}
+\newcommand{\nstep}[1][]{n\ifcsempty{#1}{}{^{#1}}}
+\newcommand{\step}[1][]{d\ifcsempty{#1}{}{^{#1}}}
+\newcommand{\tstep}[1][]{t\ifcsempty{#1}{}{^{#1}}}
 \newcommand{\xl}{l}
 \newcommand{\xu}{u}
 
@@ -60,13 +60,22 @@
 \maketitle
 
 \begin{frame}{General context}
-    We are interested in problems of the form
+    We design a method to solve the nonlinearly constrained problem
     \begin{align*}
         \min_{x \in \R^n}   & \quad \obj(x)\\
         \mathrm{s.t.}       & \quad \con(x) \le 0,\\
                             & \quad \xl \le x \le \xu,
     \end{align*}
     where derivatives of $\obj$ and $\con$ are \alert{unknown}.
+
+    \medskip
+
+    \begin{block}{Aims of the new method}
+        \begin{itemize}
+            \item The method aims at being a \alert{successor} to COBYLA \parencite{Powell_1994}.
+            \item We \alert{implement} the method into a Python solver.
+        \end{itemize}
+    \end{block}
 \end{frame}
 
 \begin{frame}{Inviolable bound constraints}
@@ -90,6 +99,65 @@
 \end{frame}
 
 \begin{frame}{A new \citeauthor{Byrd_1987}-\citeauthor{Omojokun_1989} approach}
+    \begin{columns}
+        \begin{column}{0.45\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[scale=0.85]
+                    % Linear constraints
+                    \uncover<1,2,6->{\fill[color=RoyalBlue,opacity=0.4] (-4,-1) -- (-1.5,-1) -- (-0.5,4) -- (-4,4) -- cycle;}
+                    \uncover<3-5>{\fill[color=RoyalBlue,opacity=0.4] (-4,-1) -- (-2.1,-1) -- (-1.1,4) -- (-4,4) -- cycle;}
+                    \uncover<1,2,6>{\fill[color=RoyalBlue,opacity=0.4] (-4,1) -- (0,4) -- (-4,4) -- cycle;}
+                    \uncover<3-5,7->{\fill[color=RoyalBlue,opacity=0.4] (-4,0.125) -- (1,3.875) -- (1,4) -- (-4,4) -- cycle;}
+
+                    % Trust regions
+                    \begin{scope}
+                        \clip (-4,-1) rectangle (1,4);
+                        \draw[fill=Dandelion,draw opacity=0.7,fill opacity=0.5] (0,0) circle (3);
+                        \draw[densely dotted,fill=Dandelion,opacity=0.7] (0,0) circle (2.5);
+                    \end{scope}
+
+                    % Feasible region for the tangential subproblem
+                    \begin{scope}
+                        \clip (-4,0.125) -- (-1.5,2) -- (-1.1,4) -- (-4,4) -- cycle;
+                        \uncover<4-5,10>{\fill[pattern=north west lines,opacity=0.7] (0,0) circle (3);}
+                    \end{scope}
+                    \begin{scope}
+                        \clip (-4,0.125) -- (-27/34,43/17) -- (-0.5,4) -- (-4,4) -- cycle;
+                        \uncover<8,9>{\fill[pattern=north west lines,opacity=0.7] (0,0) circle (3);}
+                    \end{scope}
+                    \begin{scope}
+                        \clip (-1.5,2) -- (-1.1,4) -- (-0.5,4) -- (-27/34,43/17) -- cycle;
+                        \uncover<10>{
+                            \fill[pattern=crosshatch,opacity=0.7] (0,0) circle (3);
+                            \draw[thick,opacity=0.7] (-1.5,2) -- (-1.365785,2.671073);
+                            }
+                    \end{scope}
+
+                    % Frame and annotations
+                    \uncover<5>{
+                        \draw[-stealth,thick,OliveGreen] (-1.5,2) -- (-2.2,1.7);
+                        \node[below,xshift=9pt,text=OliveGreen] at (-1.85,1.85) {$\tstep[k]$};
+                        \draw[-stealth,thick] (0,0) -- (-2.2,1.7);
+                        \node[below left] at (-1.1,0.85) {$\step[k]$};
+                    }
+                    \uncover<9>{
+                        \draw[-stealth,thick,OliveGreen] (-1.5,2) -- (-0.9,2.7);
+                        \node[below,xshift=5pt,text=OliveGreen] at (-1.2,2.35) {$\tstep[k]$};
+                        \draw[-stealth,thick] (0,0) -- (-0.9,2.7);
+                        \node[above right] at (-0.45,1.35) {$\step[k]$};
+                    }
+                    \uncover<2->{\draw[-stealth,thick,Mahogany] (0,0) -- (-1.5,2);}
+                    \uncover<2-5>{\node[above right,text=Mahogany] at (-0.75,1) {$\nstep[k]$};}
+                    \uncover<6->{\node[below left,text=Mahogany] at (-0.75,1) {$\nstep[k]$};}
+                    \draw[fill] (0,0) circle (1.4pt) node[below right] {$\iter[k]$};
+                    \draw[thick] (-4,-1) rectangle (1,4);
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+        \begin{column}{0.55\textwidth}
+        \end{column}
+    \end{columns}
+
     \begin{itemize}
         \item Classical approach of \textcite{Conn_Gould_Toint_2000}.
     \end{itemize}
