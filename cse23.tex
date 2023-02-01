@@ -226,7 +226,7 @@
         \item The tangential step $\tstep[k]$ solves approximately
         \begin{align*}
             \min_{\step \in \R^n}   & \quad \big[ \nabla \objm[k](\iter[k]) + \nabla_{x, x}^2 \lagm[k](\iter[k], \lm[k]) \nstep[k] \big]^{\T} \step + \frac{1}{2} \step^{\T} \nabla_{x, x}^2 \lagm[k](\iter[k], \lm[k]) \step\\
-            \text{s.t.}             & \quad \nabla \conm[k](\iter[k])^{\T} \step \le \alert{\only<1>{0}\only<2>{[\conm[k](\iter[k]) + \nabla \conm[k](\iter[k]) \nstep[k]]^-}},\\
+            \textrm{s.t.}           & \quad \nabla \conm[k](\iter[k])^{\T} \step \le \alert{\only<1>{0}\only<2>{[\conm[k](\iter[k]) + \nabla \conm[k](\iter[k]) \nstep[k]]^-}},\\
                                     & \quad \xl \le \iter[k] + \nstep[k] + \step \le \xu,\\
                                     & \quad \norm{\nstep[k] + \step} \le \rad[k].
         \end{align*}
