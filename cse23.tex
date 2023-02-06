@@ -1,17 +1,5 @@
 %% cse23.tex
 %% Copyright 2023 Tom M. Ragonneau
-%
-% This work may be distributed and/or modified under the
-% conditions of the LaTeX Project Public License, either version 1.3
-% of this license or (at your option) any later version.
-% The latest version of this license is in
-%   http://www.latex-project.org/lppl.txt
-% and version 1.3 or later is part of all distributions of LaTeX
-% version 2005/12/01 or later.
-%
-% This work has the LPPL maintenance status `maintained'.
-%
-% The Current Maintainer of this work is Tom M. Ragonneau.
 \documentclass[
     % nogiturl,  % Whether to include the git URL in the license frame
     % nolicense,  % Whether to include the license frame
@@ -292,7 +280,7 @@
             \min_Q          & \quad \norm[\big]{\nabla^2 \objm[k - 1] - \nabla^2 Q}_{\mathsf{F}}\\
             \textrm{s.t.}   & \quad Q(y) = \obj(y), ~ y \in \xpt[k],
         \end{align*}
-        for some $\xpt[k] \subseteq \R^n$, with $\objm[-1] = 0$.
+        for some $\xpt[k] \subseteq \R^n$, with $\objm[-1] \equiv 0$.
         The model $\conm[k]$ of $\con$ is built similarly.
     \end{block}
 
@@ -311,7 +299,7 @@
 \begin{frame}{A lot of questions must be addressed}
     \begin{itemize}
         \item How to calculate the steps $\nstep[k]$ and $\tstep[k]$ numerically?\\
-        \textcolor{FernGreen}{COBYQA adapts of the truncated conjugate gradient method.}
+        \textcolor{FernGreen}{COBYQA adapts the truncated conjugate gradient method.}
         \item What is the approximate Lagrange multiplier $\lm[k]$?\\
         \textcolor{FernGreen}{We choose the least-squares Lagrange multiplier.}
         \item Which merit function should we use?\\
@@ -386,15 +374,13 @@
         \begin{column}{0.5\textwidth}
             \begin{center}
                 \qrcode{https://www.cobyqa.com/}\\[1ex]
-                \href{https://www.cobyqa.com/}{Documentation}\\[0.5ex]
-                \scriptsize\url{https://www.cobyqa.com/}
+                \href{https://www.cobyqa.com/}{Documentation}
             \end{center}
         \end{column}
         \begin{column}{0.5\textwidth}
             \begin{center}
                 \qrcode{https://github.com/cobyqa/cobyqa/}\\[1ex]
-                \href{https://github.com/cobyqa/cobyqa/}{Source code}\\[0.5ex]
-                \scriptsize\url{https://github.com/cobyqa/cobyqa/}
+                \href{https://github.com/cobyqa/cobyqa/}{Source code}
             \end{center}
         \end{column}
     \end{columns}
@@ -419,10 +405,24 @@
     \end{itemize}
 \end{frame}
 
+\begin{frame}{Performance of the new \citeauthor{Byrd_1987}-\citeauthor{Omojokun_1989} approach}
+    We compare the new and the standard \citeauthor{Byrd_1987}-\citeauthor{Omojokun_1989} approaches
+    \begin{itemize}
+        \item on \alert{linearly} and \alert{nonlinearly constrained} problems,
+        \item in the implementation of COBYQA.
+    \end{itemize}
+
+    \smallskip
+
+    \begin{center}
+        \drawprofiles{{"New","Standard"}}{plain-1-50-perf-byrd-omojokun-nlqo.csv}{4}
+    \end{center}
+\end{frame}
+
 \begin{frame}{Performance on bound-constrained problems}
-    We compare COBYQA, COBYLA, and two implementations of BOBYQA on
+    We compare COBYQA, COBYLA, and two implementations of BOBYQA
     \begin{itemize}[<+->]
-        \item \alert{bound-constrained} problems,
+        \item on \alert{bound-constrained} problems,
         \item adding \alert{noise} to~$\obj$, with~$\sigma = 10^{-3}$.
     \end{itemize}
 
@@ -435,9 +435,9 @@
 \end{frame}
 
 \begin{frame}{Performance on nonlinearly constrained problems}
-    We compare COBYQA and COBYLA on
+    We compare COBYQA and COBYLA
     \begin{itemize}[<+->]
-        \item \alert{nonlinearly constrained} problems,
+        \item on \alert{nonlinearly constrained} problems,
         \item adding \alert{noise} to~$\obj$, with~$\sigma = 10^{-3}$.
     \end{itemize}
 
@@ -463,7 +463,7 @@
 
 \begin{frame}{Conclusion}
 
-    COBYQA already received positive feedback from practitioners.
+    COBYQA already received \alert{positive} feedback from practitioners.
 
     \medskip
 
