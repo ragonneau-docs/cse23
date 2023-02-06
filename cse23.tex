@@ -16,6 +16,7 @@
     % nogiturl,  % Whether to include the git URL in the license frame
     % nolicense,  % Whether to include the license frame
 ]{presentation}
+\usepackage{siunitx}
 
 % Resources for the bibliography
 \addbibresource{bib/strings.bib}
@@ -23,7 +24,51 @@
 \addbibresource{bib/ragonneau.bib}
 
 % PGF/TikZ support
-\usetikzlibrary{patterns}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{makecell}
+\usetikzlibrary{calc,decorations.pathreplacing,overlay-beamer-styles,patterns,patterns.meta,shapes}
+\pgfplotsset{
+    compat=1.18,
+}
+\usepgfplotslibrary{external}
+\pgfplotscreateplotcyclelist{profiles}{
+    thick,mark=none,VeniceBlue,solid\\
+    thick,mark=none,RobRoy,dashed\\
+    thick,mark=none,FernGreen,dotted\\
+    thick,mark=none,Maroon,dashdotted\\
+}
+\pgfplotsset{
+    every axis/.append style={
+        label style={font=\footnotesize},
+        legend cell align=left,
+        legend style={
+            rounded corners,
+            thick,
+            draw=black!15,
+            font=\scriptsize,
+        },
+        tick label style={font=\footnotesize},
+    },
+}
+
+% Quoting support
+\usepackage[
+    begintext=\openautoquote,
+    endtext=\closeautoquote,
+    vskip=\topsep,
+]{quoting}
+
+% Performance profiles
+\usepackage{xstring}
+\newcommand{\drawprofiles}[3]{%
+    \def\selectsolvers{#1}%
+    \def\selectcsv{figures/#2}%
+    \def\selectprofile{#3}%
+    \def\selectxlabel{$\log_2(\text{perf.\ ratio})$}%
+    \def\selectylabel{Perf.\ profiles ($\tau = 10^{-#3}$)}%
+    \input{figures/profiles.tex}%
+}
 
 % Maths commands for this presentation
 \newcommand{\obj}{f}
@@ -39,6 +84,7 @@
 \newcommand{\step}[1][]{d\ifblank{#1}{}{^{#1}}}
 \newcommand{\tstep}[1][]{t\ifblank{#1}{}{^{#1}}}
 \newcommand{\xl}{l}
+\newcommand{\xpt}[1][]{\mathcal{Y}\ifblank{#1}{}{^{#1}}}
 \newcommand{\xu}{u}
 
 % Metadata
@@ -127,8 +173,8 @@
 
     \begin{block}{Remarks on the subproblem}
         \begin{itemize}
-            \item We only require an approximate solution~$\step[k]$.
-            \item The solution must satisfy~$\xl \le \iter[k] + \step[k] \le \xu$.
+            \item We only require an approximate solution $\step[k]$.
+            \item The solution must satisfy $\xl \le \iter[k] + \step[k] \le \xu$.
             \item The subproblem may be \alert{infeasible}; what is a solution?
         \end{itemize}
     \end{block}
@@ -199,7 +245,7 @@
                 \node[right] at (.4,-1.2) {Linear constraints};
                 \uncover<4->{
                     \fill[pattern=north west lines,pattern color=VeniceBlue!70!black,opacity=0.8] (-.2,-2) rectangle (.2,-1.6);
-                    \node[right] at (.4,-1.8) {Feasible region for~$\tstep[k]$};
+                    \node[right] at (.4,-1.8) {Feasible region for $\tstep[k]$};
                 }
             \end{tikzpicture}
 
@@ -217,9 +263,9 @@
 \begin{frame}{A new \citeauthor{Byrd_1987}-\citeauthor{Omojokun_1989} approach (cont'd)}
     The \alert{\only<1>{standard}\only<2>{new}} approach is as follows.
     \begin{itemize}
-        \item The normal step $\nstep[k]$ solves approximately (for some~$\zeta < 1$)
+        \item The normal step $\nstep[k]$ solves approximately (for some $\zeta < 1$)
         \begin{align*}
-            \min_{\step \in \R^n}   & \quad \norm[\big]{[\conm[k](\iter[k]) + \nabla \conm[k](\iter[k]) \step]^+}\\
+            \min_{\step \in \R^n}   & \quad \norm[\big]{\big[ \conm[k](\iter[k]) + \nabla \conm[k](\iter[k]) \step \big]^+}\\
             \textrm{s.t.}           & \quad \xl \le \iter[k] + \step \le \xu,\\
                                     & \quad \norm{\step} \le \zeta \rad[k].
         \end{align*}
@@ -236,61 +282,205 @@
 \section{Interpolation-based models}
 
 \begin{frame}{Interpolation-based quadratic models}
-    \begin{itemize}
-        \item Models of \textcite{Powell_2004b}.
-        \item Least $H^2$-norm updating models of Xie and Yuan.
-    \end{itemize}
-\end{frame}
+    COBYQA models $\obj$ and $\con$ by \alert{quadratic} interpolation, as follows.
 
-\begin{frame}{Updating the interpolation set}
-    To do.
+    \medskip
+
+    \begin{block}{Derivative-free symmetric Broyden update \parencite{Powell_2004b}}
+        The $k$th model $\objm[k]$ of $\obj$ solves
+        \begin{align*}
+            \min_Q          & \quad \norm[\big]{\nabla^2 \objm[k - 1] - \nabla^2 Q}_{\mathsf{F}}\\
+            \textrm{s.t.}   & \quad Q(y) = \obj(y), ~ y \in \xpt[k],
+        \end{align*}
+        for some $\xpt[k] \subseteq \R^n$, with $\objm[-1] = 0$.
+        The model $\conm[k]$ of $\con$ is built similarly.
+    \end{block}
+
+    \medskip
+
+    The interpolation set $\xpt[k]$ is \alert{recycled} at each iteration.
+    \begin{itemize}
+        \item The set $\xpt[k + 1]$ is built as $(\xpt[k] \setminus {\bar{y}}) \cup \set{\iter[k] + \step[k]}$ for some $\bar{y} \in \xpt[k]$.
+        \item The KKT system of this variational problem is \alert{linear}.
+    \end{itemize}
+    % Least $H^2$-norm updating models of Xie and Yuan.
 \end{frame}
 
 \section{Gap between theory and practice}
 
 \begin{frame}{A lot of questions must be addressed}
-    To do.
+    \begin{itemize}
+        \item How to calculate the steps $\nstep[k]$ and $\tstep[k]$ numerically?\\
+        \textcolor{FernGreen}{COBYQA adapts of the truncated conjugate gradient method.}
+        \item What is the approximate Lagrange multiplier $\lm[k]$?\\
+        \textcolor{FernGreen}{We choose the least-squares Lagrange multiplier.}
+        \item Which merit function should we use?\\
+        \textcolor{FernGreen}{COBYQA uses the $\ell_2$-merit function.}
+        \item How to update the penalty parameter?\\
+        \textcolor{FernGreen}{The update incorporates}
+        \begin{itemize}
+            \item \textcolor{FernGreen}{a theoretical value for the exactness of the merit function, and}
+            \item \textcolor{FernGreen}{a strategy used by Powell in COBYLA.}
+        \end{itemize}
+    \end{itemize}
+
+    \bigskip
+
+    These questions (and more) are addressed in \textcite{Ragonneau_2022}.
+\end{frame}
+
+\begin{frame}{A crucial difficulty in the implementation}
+    \begin{itemize}
+        \item What if the interpolation set $\xpt[k]$ is almost nonpoised?\\
+        \textcolor{FernGreen}{A well-known approach: using a geometry-improving mechanism.}
+    \end{itemize}
+
+    \medskip
+
+    \begin{block}{This is a central difficulty in the implementation of DFO methods}
+        \begin{center}
+            \begin{tikzpicture}
+                \draw[thick] (0,0) rectangle (3,1.5);
+                \draw[thick] (6,0) rectangle (9,1.5);
+                \draw[thick,Maroon] (3,1) -- (4.4,1);
+                \draw[-stealth,thick,Maroon] (4.6,1) -- (6,1);
+                \draw[thick,Maroon] (4.3,0.9) -- (4.5,1.1);
+                \draw[thick,Maroon] (4.5,0.9) -- (4.7,1.1);
+                \draw[thick,Maroon] (6,0.5) -- (4.6,0.5);
+                \draw[-stealth,thick,Maroon] (4.4,0.5) -- (3,0.5);
+                \draw[thick,Maroon] (4.3,0.4) -- (4.5,0.6);
+                \draw[thick,Maroon] (4.5,0.4) -- (4.7,0.6);
+                \node at (1.5,0.75) {\makecell{Modeling\\ process}};
+                \node at (7.5,0.75) {\makecell{Optimization\\ process}};
+                \node[above,text=Maroon] at (4.5,1.1) {\small\emph{Often inhibit}};
+                \node[below,text=Maroon] at (4.5,0.4) {\small\emph{each other}};
+            \end{tikzpicture}
+        \end{center}
+
+        \begin{itemize}
+            \item The iterates~$\set{x^k}$ likely lie on a particular path.
+            \item The modeling process does \alert{not} ponder the optimization problem.
+        \end{itemize}
+    \end{block}
 \end{frame}
 
 \section{Implementation and experiments}
 
 \begin{frame}{The Python implementation of COBYQA}
+    \begin{block}{A quote from \textcite{Powell_2006}}
+        \begin{quoting}
+            \small%
+            The development of NEWUOA has taken nearly \alert{three years}.
+            The work was very \alert{frustrating} [...]
+        \end{quoting}
+        The development of COBYQA was not easier.
+    \end{block}
+
+    \smallskip
+
+    We implemented COBYQA in \alert{Python} and made it publicly available.
+
+    \smallskip
+
     \begin{columns}
         \begin{column}{0.5\textwidth}
             \begin{center}
                 \qrcode{https://www.cobyqa.com/}\\[1ex]
-                \href{https://www.cobyqa.com/}{Documentation}
+                \href{https://www.cobyqa.com/}{Documentation}\\[0.5ex]
+                \scriptsize\url{https://www.cobyqa.com/}
             \end{center}
         \end{column}
         \begin{column}{0.5\textwidth}
             \begin{center}
                 \qrcode{https://github.com/cobyqa/cobyqa/}\\[1ex]
-                \href{https://github.com/cobyqa/cobyqa/}{Source code}
+                \href{https://github.com/cobyqa/cobyqa/}{Source code}\\[0.5ex]
+                \scriptsize\url{https://github.com/cobyqa/cobyqa/}
             \end{center}
         \end{column}
     \end{columns}
 \end{frame}
 
 \begin{frame}{Comparing COBYQA with existing DFO solvers}
-    To do.
+    \begin{itemize}
+        \item We assess the quality of points based on
+        \begin{empheq}[left={\varphi(\iter) = \empheqlbrace}]{alignat*=2}
+            & \obj(\iter)                           && \quad \text{if~$v_{\infty}(x) \le 10^{-10}$,}\\
+            & \infty                                && \quad \text{if~$v_{\infty}(x) \ge 10^{-5}$,}\\
+            & \obj(\iter) + 10^5 v_{\infty}(\iter)  && \quad \text{otherwise,}
+        \end{empheq}
+        where~$v_{\infty}$ denotes the~$\ell_{\infty}$-constraint violation.
+        \item The problems are from the \alert{CUTEst} set.
+        \item The problems are of \alert{dimension} at most \num{50} (this is \alert{not} small).
+        \item The noisy problems replace~$\obj$ with
+        \begin{equation*}
+            \tilde{\obj}(x) = [1 + \epsilon(\iter)] \obj(\iter),
+        \end{equation*}
+        where~$\epsilon(x) \sim \mathcal{N}(0, \sigma^2)$.
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Performance on bound-constrained problems}
-    To do.
+    We compare COBYQA, COBYLA, and two implementations of BOBYQA on
+    \begin{itemize}[<+->]
+        \item \alert{bound-constrained} problems,
+        \item adding \alert{noise} to~$\obj$, with~$\sigma = 10^{-3}$.
+    \end{itemize}
+
+    \smallskip
+
+    \begin{center}
+        \only<1>{\drawprofiles{{"COBYQA","BOBYQA","COBYLA","PY-BOBYQA"}}{plain-1-50-perf-bobyqa-cobyla-cobyqa-py-bobyqa-b.csv}{4}}%
+        \only<2>{\drawprofiles{{"COBYQA","BOBYQA","COBYLA","PY-BOBYQA"}}{noisy-1-50-3-perf-bobyqa-cobyla-cobyqa-py-bobyqa-b.csv}{2}}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Performance on nonlinearly constrained problems}
-    To do.
+    We compare COBYQA and COBYLA on
+    \begin{itemize}[<+->]
+        \item \alert{nonlinearly constrained} problems,
+        \item adding \alert{noise} to~$\obj$, with~$\sigma = 10^{-3}$.
+    \end{itemize}
+
+    \smallskip
+
+    \begin{center}
+        \only<1>{\drawprofiles{{"COBYQA","COBYLA"}}{plain-1-50-perf-cobyla-cobyqa-qo.csv}{4}}%
+        \only<2>{\drawprofiles{{"COBYQA","COBYLA"}}{noisy-1-50-3-perf-cobyla-cobyqa-qo.csv}{2}}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Comparison with COBYLA}
-    To do.
+    We compare COBYQA and COBYLA on \alert{all} problems.
+
+    \bigskip
+
+    \begin{center}
+        \drawprofiles{{"COBYQA","COBYLA"}}{plain-1-50-perf-cobyla-cobyqa-ubnlqo.csv}{4}
+    \end{center}
 \end{frame}
 
 \section{Conclusion}
 
-\begin{frame}{Conclusion and future work}
-    To do.
+\begin{frame}{Conclusion}
+
+    COBYQA already received positive feedback from practitioners.
+
+    \medskip
+
+    \begin{block}{Dr.\ Gallard (leader of the MDO team at IRT Saint-Exup{\'{e}}ry, France)}
+        \begin{quoting}
+            \small%
+            I have given [COBYQA] a try and compared with COBYLA on some problems we have (without derivatives), it is \alert{significantly faster}, provides a better convergence.
+        \end{quoting}
+    \end{block}
+
+    \medskip
+
+    COBYQA will soon be included in
+    \begin{itemize}
+        \item \href{https://www.pdfo.net/}{PDFO} as a successor for COBYLA, and
+        \item \href{https://gemseo.readthedocs.io/}{GEMSEO}, an \alert{industrial} software package for MDO.
+    \end{itemize}
 \end{frame}
 
 \appendix
