@@ -74,7 +74,7 @@
 \definecolor{RobRoy}{HTML}{DAAD49}
 \definecolor{FernGreen}{HTML}{4F7942}
 \setbeamercolor{normal text}{fg=VeniceBlue!70!black,bg=black!2}
-\setbeamercolor{alerted text}{fg=RobRoy!95!black}
+\setbeamercolor{alerted text}{fg=RobRoy!90!black}
 \setbeamercolor{example text}{fg=FernGreen!95!black}
 
 % Change theme templates

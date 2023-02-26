@@ -79,7 +79,7 @@
 \title{COBYQA}
 \subtitle{A derivative-free trust-region SQP method for nonlinearly constrained optimization}
 \date{CSE23/MS281 (March 2, 2023)}
-\author{\href{https://www.tomragonneau.com/}{Tom M. Ragonneau} \and \href{https://www.zhangzk.net/}{Zaikun Zhang}}
+\author{\href{https://www.tomragonneau.com/}{Tom M. Ragonneau} (joint work with \href{https://www.zhangzk.net/}{Zaikun Zhang})}
 \institute{
     Department of Applied Mathematics\\
     The Hong Kong Polytechnic University
@@ -95,21 +95,20 @@
 \maketitle
 
 \begin{frame}{General context}
-    We design a method for solving the nonlinearly constrained problem
+    We design a method named COBYQA for solving\footnote{The equality constraints are omitted here for simplicity.}
     \begin{align*}
         \min_{\iter \in \R^n}   & \quad \obj(\iter)\\
         \mathrm{s.t.}           & \quad \con(\iter) \le 0,\\
                                 & \quad \xl \le \iter \le \xu,
     \end{align*}
-    where derivatives of $\obj$ and $\con$ are \alert{unknown}.
+    where derivatives of $\obj$ and $\con$ are \alert{unavailable}.
 
     \medskip
 
-    \begin{block}{Notes on the method (COBYQA)}
+    \begin{block}{Notes on the method}
         \begin{itemize}
             \item COBYQA aims at being a \alert{successor} to COBYLA \parencite{Powell_1994}.
             \item We \alert{implement} COBYQA into a \href{https://pypi.org/project/cobyqa/}{Python solver}.
-            \item The equality constraints are omitted for simplicity.
             \item The bound constraints are handled \alert{separately}.
         \end{itemize}
     \end{block}
@@ -163,7 +162,7 @@
         \begin{itemize}
             \item We only require an approximate solution $\step[k]$.
             \item The solution must satisfy $\xl \le \iter[k] + \step[k] \le \xu$.
-            \item The subproblem may be \alert{infeasible}; what is a solution?
+            \item The subproblem may be \alert{infeasible}. What is a solution?
         \end{itemize}
     \end{block}
 \end{frame}
@@ -294,7 +293,8 @@
     % Least $H^2$-norm updating models of Xie and Yuan.
 \end{frame}
 
-\section{Gap between theory and practice}
+% \section{Gap between theory and practice}
+\section{Many questions remain}
 
 \begin{frame}{A lot of questions must be addressed}
     \begin{itemize}
@@ -465,12 +465,12 @@
 
     \begin{itemize}
         \item COBYQA already received \alert{positive} feedback from practitioners.
-        \begin{quoting}
-            \small%
-            I have given [COBYQA] a try and compared with COBYLA on some problems we have (without derivatives), it is \alert{significantly faster}, provides a better convergence.
-        \end{quoting}
-        {\hfill\footnotesize\textemdash\ Dr.\ Gallard (leader of the MDO team at IRT Saint-Exup{\'{e}}ry)}
-        \item COBYQA will soon be included in
+        % \begin{quoting}
+        %     \small%
+        %     I have given [COBYQA] a try and compared with COBYLA on some problems we have (without derivatives), it is \alert{significantly faster}, provides a better convergence.
+        % \end{quoting}
+        % {\hfill\footnotesize\textemdash\ Dr.\ Gallard (leader of the MDO team at IRT Saint-Exup{\'{e}}ry)}
+        \item It will soon be included in
         \begin{itemize}
             \item \href{https://www.pdfo.net/}{PDFO} as a successor for COBYLA, and
             \item \href{https://gemseo.readthedocs.io/}{GEMSEO}, an \alert{industrial} software package for MDO.
@@ -478,16 +478,30 @@
         \item We will soon investigate the convergence properties of COBYQA.
     \end{itemize}
 
+    For more information, visit:
+
     \medskip
 
-    \begin{center}
-        \qrcode{https://www.cobyqa.com/}
-        \hspace{1ex}
-        \begin{tabular}{l}
-            For more information, visit:\\
-            \href{https://www.cobyqa.com/}{\texttt{www.cobyqa.com}}.
-        \end{tabular}
-    \end{center}
+    \begin{columns}
+        \begin{column}{\textwidth/3}
+            \begin{center}
+                \qrcode{https://www.cobyqa.com/}\\[1ex]
+                \href{https://www.cobyqa.com/}{COBYQA's website}
+            \end{center}
+        \end{column}
+        \begin{column}{\textwidth/3}
+            \begin{center}
+                \qrcode{https://www.tomragonneau.com/}\\[1ex]
+                \href{https://www.tomragonneau.com/}{My website}
+            \end{center}
+        \end{column}
+        \begin{column}{\textwidth/3}
+            \begin{center}
+                \qrcode{https://tomragonneau.com/documents/thesis.pdf}\\[1ex]
+                \href{https://tomragonneau.com/documents/thesis.pdf}{My thesis}
+            \end{center}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \appendix
