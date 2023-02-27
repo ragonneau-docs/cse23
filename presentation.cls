@@ -71,10 +71,10 @@
 
 % Change theme colors
 \definecolor{VeniceBlue}{HTML}{2F5675}
-\definecolor{RobRoy}{HTML}{DAAD49}
+\definecolor{Caramel}{HTML}{C68E17}
 \definecolor{FernGreen}{HTML}{4F7942}
 \setbeamercolor{normal text}{fg=VeniceBlue!70!black,bg=black!2}
-\setbeamercolor{alerted text}{fg=RobRoy!90!black}
+\setbeamercolor{alerted text}{fg=Caramel}
 \setbeamercolor{example text}{fg=FernGreen!95!black}
 
 % Change theme templates
