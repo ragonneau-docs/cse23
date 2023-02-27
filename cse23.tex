@@ -269,9 +269,7 @@
 \section{Interpolation-based models}
 
 \begin{frame}{Interpolation-based quadratic models}
-    COBYQA models $\obj$ and $\con$ by \alert{quadratic} interpolation, as follows.
-
-    \medskip
+    COBYQA models $\obj$ and $\con$ by \alert{quadratic} interpolation, as follows.\footnote{There exist other methods: \textcite{Conn_Scheinberg_Toint_1997a,Conn_Scheinberg_Toint_1997b,Conn_Scheinberg_Toint_1998}, \textcite{Wild_2008}, \textcite{Bandeira_Scheinberg_Vicente_2012}, \textcite{Zhang_2014}, \textcite{Xie_Yuan_2023}, \dots}
 
     \begin{block}{Derivative-free symmetric Broyden update \parencite{Powell_2004b}}
         The $k$th model $\objm[k]$ of $\obj$ solves
@@ -283,14 +281,11 @@
         The model $\conm[k]$ of $\con$ is built similarly.
     \end{block}
 
-    \medskip
-
     The interpolation set $\xpt[k]$ is \alert{recycled} at each iteration.
     \begin{itemize}
         \item The set $\xpt[k + 1]$ is built as $(\xpt[k] \setminus {\bar{y}}) \cup \set{\iter[k] + \step[k]}$ for some $\bar{y} \in \xpt[k]$.
         \item The KKT system of this variational problem is \alert{linear}.
     \end{itemize}
-    % Least $H^2$-norm updating models of Xie and Yuan.
 \end{frame}
 
 % \section{Gap between theory and practice}
@@ -320,7 +315,7 @@
 \begin{frame}{A crucial difficulty in the implementation}
     \begin{itemize}
         \item What if the interpolation set $\xpt[k]$ is almost nonpoised?\\
-        \textcolor{FernGreen}{A well-known approach: using a geometry-improving mechanism.}
+        \textcolor{FernGreen}{A well-known approach: using a geometry-improving mechanism.\footnote{\textcite{Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b}, \textcite{Fasano_Morales_Nocedal_2009}, \dots}}
     \end{itemize}
 
     \medskip
