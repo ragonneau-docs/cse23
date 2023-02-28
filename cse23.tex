@@ -79,8 +79,9 @@
 \title{COBYQA}
 \subtitle{A derivative-free trust-region SQP method for nonlinearly constrained optimization}
 \date{CSE23/MS281 (March 2, 2023)}
-\author{\href{https://www.tomragonneau.com/}{Tom M. Ragonneau} (joint work with \href{https://www.zhangzk.net/}{Zaikun Zhang})}
+\author{\href{https://www.tomragonneau.com/}{Tom M. Ragonneau}}
 \institute{
+    Joint work with \href{https://www.zhangzk.net/}{Zaikun Zhang}\\[\baselineskip]
     Department of Applied Mathematics\\
     The Hong Kong Polytechnic University
 }
@@ -177,7 +178,7 @@
     \begin{columns}
         \begin{column}{0.4\textwidth}
             \begin{center}
-                \begin{tikzpicture}[scale=0.85]
+                \begin{tikzpicture}[scale=0.75]
                     % Linear constraints
                     \uncover<1,2,6->{\fill[color=MidnightBlue,opacity=0.4] (-4,-1) -- (-1.5,-1) -- (-0.5,4) -- (-4,4) -- cycle;}
                     \uncover<3-5>{\fill[color=MidnightBlue,opacity=0.4] (-4,-1) -- (-2.1,-1) -- (-1.1,4) -- (-4,4) -- cycle;}
@@ -204,7 +205,7 @@
                     % Frame and annotations
                     \uncover<5>{
                         \draw[-stealth,thick,FernGreen] (-1.5,2) -- (-2.2,1.7);
-                        \node[below,xshift=9pt,text=FernGreen] at (-1.85,1.85) {$\tstep[k]$};
+                        \node[below,xshift=9.5pt,text=FernGreen] at (-1.85,1.85) {$\tstep[k]$};
                         \draw[-stealth,thick] (0,0) -- (-2.2,1.7);
                         \node[below left] at (-1.1,0.85) {$\step[k]$};
                     }
@@ -238,13 +239,12 @@
 
             \bigskip
 
-            The \alert<1-5>{standard} approach\footnote{See \textcite[\S 15.4.4]{Conn_Gould_Toint_2000}.} vs.\ the \alert<6->{new} one.
+            The \alert<1-5>{standard} approach\footnotemark\ vs.\ the \alert<6->{new} one.
         \end{column}
     \end{columns}
 
-    \medskip
-
     \uncover<9>{The feasible region for $\tstep[k]$ is \alert{wider} in the new approach.}
+    \footnotetext{\textcite[\S 15.4.4]{Conn_Gould_Toint_2000}.}
 \end{frame}
 
 \begin{frame}{A new \citeauthor{Byrd_1987}-\citeauthor{Omojokun_1989} approach (cont'd)}
@@ -269,7 +269,7 @@
 \section{Interpolation-based models}
 
 \begin{frame}{Interpolation-based quadratic models}
-    COBYQA models $\obj$ and $\con$ by \alert{quadratic} interpolation, as follows.\footnote{There exist other methods: \textcite{Conn_Scheinberg_Toint_1997a,Conn_Scheinberg_Toint_1997b,Conn_Scheinberg_Toint_1998}, \textcite{Wild_2008}, \textcite{Bandeira_Scheinberg_Vicente_2012}, \textcite{Zhang_2014}, \textcite{Xie_Yuan_2023}, \dots}
+    COBYQA models $\obj$ and $\con$ by \alert{quadratic} interpolation, as follows.\footnote{Other methods: \textcite{Conn_Scheinberg_Toint_1997a,Conn_Scheinberg_Toint_1997b,Conn_Scheinberg_Toint_1998}, \textcite{Wild_2008}, \textcite{Bandeira_Scheinberg_Vicente_2012}, \textcite{Zhang_2014}, \textcite{Xie_Yuan_2023}, \dots}
 
     \begin{block}{Derivative-free symmetric Broyden update \parencite{Powell_2004b}}
         The $k$th model $\objm[k]$ of $\obj$ solves
@@ -289,7 +289,7 @@
 \end{frame}
 
 % \section{Gap between theory and practice}
-\section{Many questions remain}
+\section{Many difficulties arise}
 
 \begin{frame}{A lot of questions must be addressed}
     \begin{itemize}
@@ -394,7 +394,7 @@
         \item The problems are of \alert{dimension} at most \num{50} (this is \alert{not} small).
         \item The noisy problems replace~$\obj$ with
         \begin{equation*}
-            \tilde{\obj}(x) = [1 + \epsilon(\iter)] \obj(\iter),
+            \tilde{\obj}(x) = \big[1 + \epsilon(\iter)\big] \obj(\iter),
         \end{equation*}
         where~$\epsilon(x) \sim \mathcal{N}(0, \sigma^2)$.
     \end{itemize}
