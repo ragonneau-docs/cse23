@@ -79,9 +79,8 @@
 \title{COBYQA}
 \subtitle{A derivative-free trust-region SQP method for nonlinearly constrained optimization}
 \date{CSE23/MS281 (March 2, 2023)}
-\author{\href{https://www.tomragonneau.com/}{Tom M. Ragonneau}}
+\author{\href{https://www.tomragonneau.com/}{\textbf{Tom M. Ragonneau}} \and \href{https://www.zhangzk.net/}{Zaikun Zhang}}
 \institute{
-    Joint work with \href{https://www.zhangzk.net/}{Zaikun Zhang}\\[\baselineskip]
     Department of Applied Mathematics\\
     The Hong Kong Polytechnic University
 }
@@ -281,6 +280,7 @@
         The model $\conm[k]$ of $\con$ is built similarly.
     \end{block}
 
+    \vspace{-0.25\baselineskip}
     The interpolation set $\xpt[k]$ is \alert{recycled} at each iteration.
     \begin{itemize}
         \item The set $\xpt[k + 1]$ is built as $(\xpt[k] \setminus {\bar{y}}) \cup \set{\iter[k] + \step[k]}$ for some $\bar{y} \in \xpt[k]$.
