@@ -78,7 +78,7 @@
 % Metadata
 \title{COBYQA}
 \subtitle{A derivative-free trust-region SQP method for nonlinearly constrained optimization}
-\date{CSE23/MS281 (March 2, 2023)}
+\date{CSE23 (March 2, 2023)}
 \author{\href{https://www.tomragonneau.com/}{\textbf{Tom M. Ragonneau}} \and \href{https://www.zhangzk.net/}{Zaikun Zhang}}
 \institute{
     Department of Applied Mathematics\\
@@ -268,7 +268,7 @@
 \section{Interpolation-based models}
 
 \begin{frame}{Interpolation-based quadratic models}
-    COBYQA models $\obj$ and $\con$ by \alert{quadratic} interpolation, as follows.\footnote{Other methods: \textcite{Conn_Scheinberg_Toint_1997a,Conn_Scheinberg_Toint_1997b,Conn_Scheinberg_Toint_1998}, \textcite{Wild_2008}, \textcite{Bandeira_Scheinberg_Vicente_2012}, \textcite{Zhang_2014}, \textcite{Xie_Yuan_2023}, \dots}
+    COBYQA models $\obj$ and $\con$ by \alert{quadratic} interpolation, as follows.\footnote{Other methods: \textcite{Conn_Scheinberg_Toint_1997a,Conn_Scheinberg_Toint_1997b,Conn_Scheinberg_Toint_1998}, \textcite{Wild_2008}, \textcite{Bandeira_Scheinberg_Vicente_2012}, \textcite{Zhang_2014}, \textcite{Xie_Yuan_2023}.}
 
     \begin{block}{Derivative-free symmetric Broyden update \parencite{Powell_2004b}}
         The $k$th model $\objm[k]$ of $\obj$ solves
@@ -315,7 +315,7 @@
 \begin{frame}{A crucial difficulty in the implementation}
     \begin{itemize}
         \item What if the interpolation set $\xpt[k]$ is almost nonpoised?\\
-        \textcolor{FernGreen}{A well-known approach: using a geometry-improving mechanism.\footnote{\textcite{Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b}, \textcite{Fasano_Morales_Nocedal_2009}, \dots}}
+        \textcolor{FernGreen}{A well-known approach: using a geometry-improving mechanism.\footnote{\textcite{Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b}, \textcite{Fasano_Morales_Nocedal_2009}.}}
     \end{itemize}
 
     \medskip

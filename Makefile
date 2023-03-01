@@ -3,7 +3,7 @@
 LC := latexmk
 LCFLAGS := -shell-escape -file-line-error -halt-on-error -interaction=nonstopmode
 
-latex: main
+latex: cse23
 
 %: %.tex
 	$(LC) $(LCFLAGS) $^
