@@ -145,7 +145,7 @@
 
 \begin{frame}{The derivative-free trust-region SQP method}
 
-    COBYQA solves iteratively the trust-region SQP subproblem
+    COBYQA iteratively solves the trust-region SQP subproblem
     \begin{align*}
         \min_{\step \in \R^n}   & \quad \nabla \only<1>{\obj}\only<2>{\alert{\objm[k]}}(\iter[k])^{\T} \step + \frac{1}{2} \step^{\T} \nabla_{x, x}^2 \only<1>{\lag}\only<2>{\alert{\lagm[k]}}(\iter[k], \lm[k]) \step\\
         \textrm{s.t.}           & \quad \only<1>{\con}\only<2>{\alert{\conm[k]}}(\iter[k]) + \nabla \only<1>{\con}\only<2>{\alert{\conm[k]}}(\iter[k]) \step \le 0,\\
@@ -153,7 +153,6 @@
                                 & \quad \norm{\step} \le \rad[k],
     \end{align*}
     with $\only<1>{\lag}\only<2>{\alert{\lagm[k]}}(\iter, \lm) = \only<1>{\obj}\only<2>{\alert{\objm[k]}}(\iter) + \lm^{\T} \only<1>{\con}\only<2>{\alert{\conm[k]}}(\iter)$\only<2>{, given some models $\objm[k]$ and $\conm[k]$}.
-    % Details are given in \textcite{Ragonneau_2022}.
 
     \medskip
     \pause
@@ -288,7 +287,6 @@
     \end{itemize}
 \end{frame}
 
-% \section{Gap between theory and practice}
 \section{Many difficulties arise}
 
 \begin{frame}{A lot of questions must be addressed}
@@ -460,11 +458,6 @@
 
     \begin{itemize}
         \item COBYQA already received \alert{positive} feedback from practitioners.
-        % \begin{quoting}
-        %     \small%
-        %     I have given [COBYQA] a try and compared with COBYLA on some problems we have (without derivatives), it is \alert{significantly faster}, provides a better convergence.
-        % \end{quoting}
-        % {\hfill\footnotesize\textemdash\ Dr.\ Gallard (leader of the MDO team at IRT Saint-Exup{\'{e}}ry)}
         \item It will soon be included in
         \begin{itemize}
             \item \href{https://www.pdfo.net/}{PDFO} as a successor for COBYLA, and
